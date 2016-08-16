@@ -36,3 +36,12 @@ Route::get('/rolldice/{guess}', function ($guess) {
 		->with("guess",  $guess)
 	;
 });
+
+Route::get('/uppercase/{word}', function ($word) {
+    $data = [
+    'word' => $word,
+    'wordUpper' => strtoupper($word),
+    ];
+    return view('uppercase', $data);
+});
+
