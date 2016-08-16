@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@showWelcome');
 
 Route::get('/sayhello/{name}/{name2}', function ($name, $name2) {
 	return "Hello $name and $name2";
@@ -37,11 +35,5 @@ Route::get('/rolldice/{guess}', function ($guess) {
 	;
 });
 
-Route::get('/uppercase/{word}', function ($word) {
-    $data = [
-    'word' => $word,
-    'wordUpper' => strtoupper($word),
-    ];
-    return view('uppercase', $data);
-});
+Route::get('/uppercase/{word}', 'HomeController@uppercase');
 
