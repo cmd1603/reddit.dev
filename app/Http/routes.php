@@ -28,3 +28,11 @@ Route::get('/sayhello/{name}', function($name)
 	$data = array('name' => $name);
     return view('my-first-view', $data);
 });
+
+Route::get('/rolldice/{guess}', function ($guess) {
+	$roll = mt_rand(1,6);
+	return view ('roll-dice')
+		->with("roll",  $roll)
+		->with("guess",  $guess)
+	;
+});
