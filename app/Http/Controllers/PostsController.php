@@ -28,7 +28,7 @@ class PostsController extends Controller
     public function create()
     {
         //
-        return "Show a form for creating a post";
+        return view('posts.create');
     }
 
     /**
@@ -40,7 +40,7 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         //
-        return "Store the new post";
+        return back()->withInput();
     }
 
     /**
