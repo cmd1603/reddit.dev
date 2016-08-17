@@ -13,6 +13,15 @@
 
 Route::get('/', 'HomeController@showWelcome');
 
+Route::get('/uppercase/{word}', 'HomeController@uppercase');
+
+Route::get('/rolldice/{guess}', 'HomeController@rolldice');
+
+Route::get('/increment/{number?}', 'HomeController@increment');
+
+Route::resource('/posts', 'PostsController');
+
+
 Route::get('/sayhello/{name}/{name2}', function ($name, $name2) {
 	return "Hello $name and $name2";
 });
@@ -27,13 +36,15 @@ Route::get('/sayhello/{name}', function($name)
     return view('my-first-view', $data);
 });
 
-Route::get('/rolldice/{guess}', function ($guess) {
-	$roll = mt_rand(1,6);
-	return view ('roll-dice')
-		->with("roll",  $roll)
-		->with("guess",  $guess)
-	;
-});
 
-Route::get('/uppercase/{word}', 'HomeController@uppercase');
+
+
+
+
+
+
+
+
+
+
 
