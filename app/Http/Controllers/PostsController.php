@@ -43,9 +43,14 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $rules);
 
-        $post = new Post();
+
+        $this->validate($request, Post::$rules);
+        
+        $request->session()->flash('message', 'Stored successfully');
+        //$request->session()->forget('message');
+
+        $post = new Post;
         $post->title = $request->get('title');
         $post->url = $request->get('url');
         $post->content = $request->get('content');
