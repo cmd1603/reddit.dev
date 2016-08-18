@@ -10,6 +10,7 @@
 		<h1>Description</h1>
 		{{ $post->content }}
 		<h3>Submitted by:</h3>
-		{{ $post->created_by }}
-	@endforeach
+
+	@endforeach		
+	{!! $posts->render() !!}
 @stop	
