@@ -1,5 +1,5 @@
 <?php
-
+use App\Post;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -20,6 +20,12 @@ Route::get('/rolldice/{guess}', 'HomeController@rolldice');
 Route::get('/increment/{number?}', 'HomeController@increment');
 
 Route::resource('/posts', 'PostsController');
+
+Route::get('orm-test', function ()
+{
+$post = Post::all();
+dd ($post);
+});
 
 
 Route::get('/sayhello/{name}/{name2}', function ($name, $name2) {
