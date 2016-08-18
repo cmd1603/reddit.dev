@@ -43,11 +43,19 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = array(
+            'title' => 'required|max:100',
+            'url' => 'required',
+            'content' => 'required'
+            );
+
+        $this->validate($request, $rules);
+        
         $post = new Post();
         $post->title = $request->get('title');
         $post->url = $request->get('url');
         $post->content = $request->get('content');
-        $post->created_by = 6;
+        $post->created_by = 1;
         $post->save();
 
         return redirect()->action('PostsController@index');
@@ -66,7 +74,7 @@ class PostsController extends Controller
             $data = [
                 'post' => $post
             ];
-        return view('post.show', $data);
+        return view('posts.show', $data);
     }
 
     /**
