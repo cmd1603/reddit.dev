@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PostsController extends Controller
 {
@@ -43,10 +42,8 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $this->validate($request, Post::$rules);
-        
+
         $request->session()->flash('message', 'Stored successfully');
         //$request->session()->forget('message');
 
@@ -56,6 +53,9 @@ class PostsController extends Controller
         $post->content = $request->get('content');
         $post->created_by = 1;
         $post->save();
+        
+        Log::info('This is some useful information.');
+
 
         return redirect()->action('PostsController@index');
     }
@@ -73,6 +73,11 @@ class PostsController extends Controller
             $data = [
                 'post' => $post
             ];
+
+            if(!$post) {
+                abort(404);
+            }
+
         return view('posts.show', $data);
     }
 
