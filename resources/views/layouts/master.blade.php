@@ -9,7 +9,11 @@
 @if (session()->has('message'))
     <div class="alert alert-success">{{ session('message') }}</div>
 @endif
-
+@if (Auth::check())
+    <div>
+    <a href={{ action('Auth\AuthController@getLogout')  }}>Logout</a>
+    </div>
+@endif
 @yield('content')
 
 

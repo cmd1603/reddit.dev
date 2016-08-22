@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
-
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -39,6 +37,13 @@ class HomeController extends Controller
         $number += 1;
 
         return view('increment') -> with('number', $number);
+    }
+
+    public function logoutUser()
+    {
+        session()->flash('SUCCESS_MESSAGE', 'You have logged out');
+        Auth::logout();
+        return redirect()->action('/login');
     }
 
 }

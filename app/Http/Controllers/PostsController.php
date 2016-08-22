@@ -5,10 +5,16 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class PostsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +36,6 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
         return view('posts.create');
     }
 
@@ -42,22 +47,10 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, Post::$rules);
-
-        $request->session()->flash('message', 'Stored successfully');
-        //$request->session()->forget('message');
-
         $post = new Post;
-        $post->title = $request->get('title');
-        $post->url = $request->get('url');
-        $post->content = $request->get('content');
-        $post->created_by = 1;
-        $post->save();
-        
-        Log::info('This is some useful information.');
+        $post->created_by = Auth::user()->id;
+        return $this->validateAndSave($post, $request);
 
-
-        return redirect()->action('PostsController@index');
     }
 
     /**
@@ -89,8 +82,16 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
-        return "Show a form for editing a specific post";
+        $post = Post::find($id);
+        // $user = Auth::user();
+
+            if (1 == $post->created_by) {
+                return view('posts.edit')->with(['post' => $post]);
+            } else {
+                session()->flash('ERROR_MESSAGE', 'You can\'t edit a post you don\'t own!');
+                return redirect()->action('PostsController@index');
+            }
+    
     }
 
     /**
@@ -102,14 +103,8 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $post = Post::find($id);
-            $post->title = $request->input('title');
-            $post->url = $request->input('url');
-            $post->content = $request->input('content');
-            $post->save();
-
-        return $redirect()->action('PostsController@show', $post->id);
+        return $this->validateAndSave($post, $request);
     }
 
     /**
@@ -121,8 +116,30 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
-            $post->delete();
+        $post->delete();
+        if(!$post) {
+            abort(404);
+        }
 
-        return "Delete a specific post";
+        session()->flash('SUCCESS_MESSAGE', 'Your post was deleted');
+        return redirect()->action('PostsController@index');
     }
+
+    private function validateAndSave(Post $post, Request $request)
+    {
+        $request->session()->flash('ERROR_MESSAGE', 'Store attempt unsuccessful');
+
+        $this->validate($request, Post::$rules);
+
+        $request->session()->forget('ERROR_MESSAGE');
+
+        $post->title = $request->get('title');
+        $post->url = $request->get('url');
+        $post->content = $request->get('content');
+        $post->save();
+
+        $request->session()->flash('SUCCESS_MESSAGE', 'Post was saved successfully');
+    }
+
+
 }
