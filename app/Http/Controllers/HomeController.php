@@ -39,11 +39,5 @@ class HomeController extends Controller
         return view('increment') -> with('number', $number);
     }
 
-    public function logoutUser()
-    {
-        session()->flash('SUCCESS_MESSAGE', 'You have logged out');
-        Auth::logout();
-        return redirect()->action('/login');
-    }
 
 }

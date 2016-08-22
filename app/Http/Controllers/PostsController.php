@@ -22,7 +22,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(2);
+        $posts = Post::paginate(4);
             $data = [
                 'posts' => $posts
             ];
@@ -61,7 +61,6 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
         $post = Post::find($id);
             $data = [
                 'post' => $post
@@ -85,10 +84,10 @@ class PostsController extends Controller
         $post = Post::find($id);
         // $user = Auth::user();
 
-            if (1 == $post->created_by) {
+            if (Auth::id() == $post->created_by) {
                 return view('posts.edit')->with(['post' => $post]);
             } else {
-                session()->flash('ERROR_MESSAGE', 'You can\'t edit a post you don\'t own!');
+                session()->flash('error', 'You can\'t edit a post you don\'t own!');
                 return redirect()->action('PostsController@index');
             }
     
@@ -116,30 +115,39 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
-        $post->delete();
-        if(!$post) {
-            abort(404);
+
+        if (Auth::id() == $post->created_by) {
+            $post->delete();
+            session()->flash('message', 'Your post was deleted');
+            return redirect()->action('PostsController@index');
+        } else {
+            session()->flash('error', 'You can\'t delete a post you don\'t own!');
+            return redirect()->action('PostsController@index');
         }
 
-        session()->flash('SUCCESS_MESSAGE', 'Your post was deleted');
-        return redirect()->action('PostsController@index');
     }
 
     private function validateAndSave(Post $post, Request $request)
     {
-        $request->session()->flash('ERROR_MESSAGE', 'Store attempt unsuccessful');
+        $request->session()->flash('error', 'Store attempt unsuccessful');
 
         $this->validate($request, Post::$rules);
 
-        $request->session()->forget('ERROR_MESSAGE');
+        $request->session()->forget('error');
 
         $post->title = $request->get('title');
         $post->url = $request->get('url');
         $post->content = $request->get('content');
         $post->save();
 
-        $request->session()->flash('SUCCESS_MESSAGE', 'Post was saved successfully');
+        $request->session()->flash('message', 'Post was saved successfully');
     }
 
+    public function logoutUser()
+    {
+        session()->flash('message', 'You have logged out');
+        Auth::logout();
+        return redirect()->action('/login');
+    }
 
 }

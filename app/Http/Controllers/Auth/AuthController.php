@@ -24,6 +24,8 @@ class AuthController extends Controller
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     protected $redirectPath = '/posts';
+    protected $logicPath = '/auth/login';
+    protected $redirectAfterLogout = '/auth/login';
 
     /**
      * Create a new authentication controller instance.
@@ -63,5 +65,12 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    public function logoutUser()
+    {
+        session()->flash('SUCCESS_MESSAGE', 'You have logged out');
+        Auth::logout();
+        return redirect()->action('/login');
     }
 }
