@@ -22,7 +22,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(4);
+        $posts = Post::with('author')->paginate(4);
             $data = [
                 'posts' => $posts
             ];

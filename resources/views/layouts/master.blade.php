@@ -18,7 +18,7 @@
 @if (Auth::check())
     <div>
         <a href={{ action('Auth\AuthController@getLogout')  }}>Logout</a>
-        <a href={{ action('Auth\AuthController@getLogout')  }}>Logout</a>
+        {{--<a href={{ action('Auth\AuthController@getLogout')  }}>Logout</a>--}}
     </div>
 @endif
 

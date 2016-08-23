@@ -14,5 +14,11 @@ class Post extends Model
             'content' => 'required'
             );
 
+    public function author()
+    {
+        //SELECT * FROM users WHERE id = $post->created_by
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 
 }

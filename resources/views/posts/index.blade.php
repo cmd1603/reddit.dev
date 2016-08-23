@@ -13,7 +13,7 @@
 			<td>{{ $post->title }} - {{ $post->created_at->setTimezone('America/Chicago')->format('l, F jS Y @ h:i:s A') }}</td>
 			<td><a href="{{ $post->url }}">{{ $post->url }}</a></td>
 			<td>{{ $post->content }}</td>
-			<td>{{ $post->created_by }}</td>
+			<td>{{ $post->author->name }}</td>
 			<td>
 				<form method="POST" action="{{ action('PostsController@destroy', $post->id) }}">
 					{{ method_field('DELETE') }}
