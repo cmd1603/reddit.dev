@@ -18,7 +18,7 @@
 				<form method="POST" action="{{ action('PostsController@destroy', $post->id) }}">
 					{{ method_field('DELETE') }}
 					{!! csrf_field() !!}
-				 <button type="submit">DELETE</button>				
+				 <button type="submit">DELETE</button>
 				</form>
 			</td>
 			<td><a href="{{ action('PostsController@edit', $post->id) }}">Edit</a></td>

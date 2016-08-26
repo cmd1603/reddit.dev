@@ -20,14 +20,23 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('author')->paginate(4);
+
+        if(isset($request['search'])) {
+            $posts = Post::findBySearch($request['field'], $request['search'])->paginate(3);
+        } else {
+            $posts = Post::with('author')->paginate(4);
+        }
             $data = [
                 'posts' => $posts
             ];
         return view('posts.index', $data);
     }
+
+    // select * from posts
+    // limit 5 offset 5
+    //order by created_at
 
     /**
      * Show the form for creating a new resource.
@@ -150,4 +159,26 @@ class PostsController extends Controller
         return redirect()->action('/login');
     }
 
+    public function addVote(Request $request)
+    {
+        Model::unguard();
+        $vote = Vote::firstOrCreate([
+            'user_id' => $request->user()->id,
+            'post_id' => $request->input('post_id')
+        ]);
+        $vote->vote = $request->input('vote');
+        $vote->save();
+        $post = $vote->post;
+        $post->vote_score = $post->voteScore();
+        $post->save();
+        $data = [
+            'vote_score' => $post->vote_score,
+            'vote' => $vote->vote
+        ];
+        return $data;
+    }
+
 }
+
+
+
